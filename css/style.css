@@ -2,8 +2,33 @@ html, body {
       height: 100%;
       margin: 0;
       padding: 0;
+
     }
 
 #map-canvas {
   height: 100%;
+  overflow: hidden;
+
 }
+
+#list-div{ 
+
+  position: absolute;
+  top: 100px; 
+  left: 10px; 
+  z-index: 99;
+
+}
+
+  /* LIST #8 */
+#list-div {  }
+#list-div ul { list-style:none; }
+#list-div ul li { font-family:Georgia,serif,Times; font-size:18px; }
+#list-div ul li a { display:block; width:300px; height:28px; background-color:#333; border-left:5px solid #222; border-right:5px solid #222; padding-left:10px;
+  text-decoration:none; color:#bfe1f1; }
+#list-div ul li a:hover {  -moz-transform:rotate(-5deg); -moz-box-shadow:10px 10px 20px #000000;
+  -webkit-transform:rotate(-5deg); -webkit-box-shadow:10px 10px 20px #000000;
+  transform:rotate(-5deg); box-shadow:10px 10px 20px #000000; }
+
+
+
