@@ -242,4 +242,7 @@ var koViewModel = function() {
 
 };
 
+
+function googleSuccess() {
 ko.applyBindings(new koViewModel());
+}
