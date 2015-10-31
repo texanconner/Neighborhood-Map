@@ -61,7 +61,12 @@ var koViewModel = function() {
   
   
 
- //  Sourced from  http://codepen.io/prather-mcs/pen/KpjbNN - Used this method of creating an array of all elements, and 
+
+ //  Sourced from  http://codepen.io/prather-mcs/pen/KpjbNN for filter the visible places
+ //  This creates each place, creates the map info for each place, retrieves yelp info and makes the info windows.
+
+ // Used this method of creating an array of all elements, and 
+
  //  one of the visible elements to be show when list filtering.
 
   // Build "Place" objects out of raw place data. It is common to receive place
@@ -123,10 +128,11 @@ var koViewModel = function() {
         dataType: 'jsonp',
         success: function(results) {
           // Do stuff with results
-          
-        place.yelpName = '<div> <h1> <a href=' + results.url + '>'  + results.name  + '</a> </h1> </div> <div> <h4> Number of Reviews: ' + results.review_count +' </h4> </div> <div> <img src="'+ results.rating_img_url + '"' +'</div>';
 
-        
+         // This creates the info Window content. 
+        place.yelpName = '<div> <h1> <a href=' + results.url + '>'  + results.name  + '</a> </h1> </div> <div> <h4> Number of Reviews: ' + results.review_count +' </h4> </div> <div> <img src="'+ results.rating_img_url + '"' +'</div>';
+      
+
   
         },
         fail: function() {
@@ -140,7 +146,8 @@ var koViewModel = function() {
       $.ajax(settings);
 
 
-  
+
+      // listens for click on map markers and opens info window if clicked
 
         google.maps.event.addListener(place.marker, 'click', function() {
 
@@ -179,7 +186,10 @@ var koViewModel = function() {
   }
 
 
+
+  // sources http://codepen.io/prather-mcs/pen/KpjbNN from Udacity discussion board. 
   
+
   // This array will contain what its name implies: only the markers that should
   // be visible based on user input. My solution does not need to use an 
   // observableArray for this purpose, but other solutions may require that.
@@ -240,4 +250,9 @@ var koViewModel = function() {
 
 };
 
+
+// Starts viewmodel on success from google callback.  From Udacity discussion board. 
+function googleSuccess() {
 ko.applyBindings(new koViewModel());
+}
+

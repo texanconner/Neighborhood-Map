@@ -3,8 +3,11 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
+
+		<meta name=viewport content="width=device-width, initial-scale=1">
 		<title> Neighborhood map </title>
-		<link rel="stylesheet" href="CSS/style.css">
+		<link rel="stylesheet" href="css/style.css">
+
 		<!-- boot strap -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
@@ -33,14 +36,16 @@
 
 			
 
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCnLj6qK2jyBq52kmLimD4oaNmzAo6H1Fw&libraries=places">
+
+	<script async type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCnLj6qK2jyBq52kmLimD4oaNmzAo6H1Fw&libraries=places&callback=googleSuccess">
 	    	</script> 
 
-	<script src="JS/knockout.js"></script>
+	<script async src="js/knockout.js"></script>
 
-	<script src="JS/oauth-signature.min.js"></script>
-	<script src="JS/jquery-2.1.4.min.js"></script>
-	<script src="JS/test.js"></script>
+	<script async src="js/oauth-signature.min.js"></script>
+	<script async src="js/jquery-2.1.4.min.js"></script>
+	<script src="js/app.js"></script>
+
 	
 
 	</body>
