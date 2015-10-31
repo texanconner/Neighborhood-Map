@@ -15,18 +15,17 @@
 <body>
 	<div id="map-canvas"></div>
 
+
+	<div id="search-bar">
+		Where do you want a drink? <input data-bind="textInput: userInput, event: {keyup: filterMarkers}" placeholder="Search..."></input>
+	</div>
+
+
 	<div id="list-div">
 
-		<ul id="list">
-			<li><a href="#"> hi </a></li>
-			<li><a href="#"> hi2 </a></li>
-
+		<ul data-bind="foreach: visiblePlaces">
+				<li data-bind="text: locationName, click: $parent.openInfo.bind($data)"></li>
 		</ul>
-
-
-
-
-
 
 	</div>
 
@@ -36,9 +35,13 @@
 
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCnLj6qK2jyBq52kmLimD4oaNmzAo6H1Fw&libraries=places">
 	    	</script> 
+
 	<script src="JS/knockout.js"></script>
+
+	<script src="JS/oauth-signature.min.js"></script>
 	<script src="JS/jquery-2.1.4.min.js"></script>
-	<script src="JS/app.js"></script>
+	<script src="JS/test.js"></script>
+	
 
 	</body>
 
