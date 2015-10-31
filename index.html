@@ -3,51 +3,34 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
-
 		<meta name=viewport content="width=device-width, initial-scale=1">
 		<title> Neighborhood map </title>
 		<link rel="stylesheet" href="css/style.css">
-
 		<!-- boot strap -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-
-		
-
 	</head>
+	<body>
+		<div id="map-canvas" class="map-class"></div>
+	
+		<div class="search-bar"> Where do you want a drink? <input data-bind="textInput: userInput, event: {keyup: filterMarkers}" placeholder="Search...">
+		</div>
 
-<body>
-	<div id="map-canvas"></div>
-
-
-	<div id="search-bar">
-		Where do you want a drink? <input data-bind="textInput: userInput, event: {keyup: filterMarkers}" placeholder="Search..."></input>
-	</div>
-
-
-	<div id="list-div">
-
-		<ul data-bind="foreach: visiblePlaces">
-				<li data-bind="text: locationName, click: $parent.openInfo.bind($data)"></li>
-		</ul>
-
-	</div>
-
-
-
-			
-
-
-	<script async type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCnLj6qK2jyBq52kmLimD4oaNmzAo6H1Fw&libraries=places&callback=googleSuccess">
-	    	</script> 
-
-	<script src="js/knockout.js"></script>
-
-	<script src="js/oauth-signature.min.js"></script>
-	<script src="js/jquery-2.1.4.min.js"></script>
-	<script src="js/app.js"></script>
+		<div >
+			<button class="btn" data-bind="click: toggle.bind()">Show/Hide List</button> 
+		</div>
 
 	
+		<div class="list-div" data-bind="visible: showList">
+			<ul data-bind="foreach: visiblePlaces">
+				<li data-bind="text: locationName, click: $parent.openInfo.bind($data)"></li>
+			</ul>
+		</div>
+	
+		<script src="js/knockout.js"></script>
+		<script src="js/oauth-signature.min.js"></script>
+		<script src="js/jquery-2.1.4.min.js"></script>
+		<script src="js/app.js"></script>
 
+		<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCnLj6qK2jyBq52kmLimD4oaNmzAo6H1Fw&libraries=places&callback=initMap"></script> 
 	</body>
-
 </html>

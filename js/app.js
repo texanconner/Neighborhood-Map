@@ -43,6 +43,21 @@ var locationData = [
 
 ];
 
+  
+var googleMap;   
+initMap = function() {
+
+  // Build the Google Map object. Store a reference to it.
+googleMap = new google.maps.Map(document.getElementById('map-canvas'), {
+  center: {lat: 32.804653, lng: -96.799586},
+  zoom: 16
+});
+
+
+
+ko.applyBindings(new koViewModel());
+
+}
 
 
 // View Model
@@ -50,16 +65,9 @@ var locationData = [
 var koViewModel = function() {
   var self = this;
 
+  
+
   var infowindow = new google.maps.InfoWindow();
-  
-  
-  // Build the Google Map object. Store a reference to it.
-  self.googleMap = new google.maps.Map(document.getElementById('map-canvas'), {
-    center: {lat: 32.804653, lng: -96.799586},
-    zoom: 16
-  });
-  
-  
 
 
  //  Sourced from  http://codepen.io/prather-mcs/pen/KpjbNN for filter the visible places
@@ -82,84 +90,73 @@ var koViewModel = function() {
   
   // Build Markers via the Maps API and place them on the map.
   self.allPlaces.forEach(function(place) {
+
+
     var markerOptions = {
-      map: self.googleMap,
+      map: googleMap,
       position: place.latLng,
       animation: google.maps.Animation.DROP
     };
-    
-  
+      
     place.marker = new google.maps.Marker(markerOptions);
 
+    // Yelp API call - Ideas sourced from Udacity office hours and discussion board.
 
+    function nonce_generate() {
+      return (Math.floor(Math.random() * 1e12).toString());
+    }
 
-// Yelp API call - Ideas sourced from Udacity office hours and discussion board.
+    // Users the Business ID in the location data
+    var YELP_BASE_URL = 'https://api.yelp.com/v2/';
 
-  function nonce_generate() {
-    return (Math.floor(Math.random() * 1e12).toString());
-  }
+    var yelp_url = YELP_BASE_URL + 'business/' + place.yelpID;
 
-// Users the Business ID in the location data
-  var YELP_BASE_URL = 'https://api.yelp.com/v2/'
+    var parameters = {
+      oauth_consumer_key: 'Yn-PC-1RRCMvJgfNe-mE6A',
+      oauth_token: 'tR4TGKQAaYKfUV0kNmnO85YpwnN8I8Ji',
+      oauth_nonce: nonce_generate(),
+      oauth_timestamp: Math.floor(Date.now()/1000),
+      oauth_signature_method: 'HMAC-SHA1',
+      oauth_version : '1.0',
+      callback: 'cb'              // This is crucial to include for jsonp implementation in AJAX or else the oauth-signature will be wrong.
+    },
 
-  var yelp_url = YELP_BASE_URL + 'business/' + place.yelpID;
+    // Not sure of how to keep these hidden yet.  Need to reveiw Oauth some more.  
+    YELP_KEY_SECRET = 'Ho0wd7VAyNSmg225bgGAvPCyJvk';
+    YELP_TOKEN_SECRET = 'BoeCfNUVcKko2mQAo3t_hd759AI';
 
-      var parameters = {
-        oauth_consumer_key: 'Yn-PC-1RRCMvJgfNe-mE6A',
-        oauth_token: 'tR4TGKQAaYKfUV0kNmnO85YpwnN8I8Ji',
-        oauth_nonce: nonce_generate(),
-        oauth_timestamp: Math.floor(Date.now()/1000),
-        oauth_signature_method: 'HMAC-SHA1',
-        oauth_version : '1.0',
-        callback: 'cb'              // This is crucial to include for jsonp implementation in AJAX or else the oauth-signature will be wrong.
+    var encodedSignature = oauthSignature.generate('GET',yelp_url, parameters, YELP_KEY_SECRET, YELP_TOKEN_SECRET);
+    parameters.oauth_signature = encodedSignature;
+
+    var settings = {
+      url: yelp_url,
+      data: parameters,
+      cache: true,                // This is crucial to include as well to prevent jQuery from adding on a cache-buster parameter "_=23489489749837", invalidating our oauth-signature
+      dataType: 'jsonp',
+      success: function(results) {
+        // Do stuff with results
+
+       // This creates the info Window content. 
+      place.yelpName = '<div> <h1> <a href=' + results.url + '>'  + results.name  + '</a> </h1> </div> <div> <h4> Number of Reviews: ' + results.review_count +' </h4> </div> <div> <img src="'+ results.rating_img_url + '"' +'</div>';
+
       },
+      fail: function() {
+        // Do stuff on fail
+        console.log('Yelp API Error');
 
-// Not sure of how to keep these hidden yet.  Need to reveiw Oauth some more.  
-      YELP_KEY_SECRET = 'Ho0wd7VAyNSmg225bgGAvPCyJvk',
-      YELP_TOKEN_SECRET = 'BoeCfNUVcKko2mQAo3t_hd759AI';
+      }
+    };
 
-      var encodedSignature = oauthSignature.generate('GET',yelp_url, parameters, YELP_KEY_SECRET, YELP_TOKEN_SECRET);
-      parameters.oauth_signature = encodedSignature;
+        // Send AJAX query via jQuery library.
+    $.ajax(settings);
 
-      var settings = {
-        url: yelp_url,
-        data: parameters,
-        cache: true,                // This is crucial to include as well to prevent jQuery from adding on a cache-buster parameter "_=23489489749837", invalidating our oauth-signature
-        dataType: 'jsonp',
-        success: function(results) {
-          // Do stuff with results
+    // listens for click on map markers and opens info window if clicked
 
-         // This creates the info Window content. 
-        place.yelpName = '<div> <h1> <a href=' + results.url + '>'  + results.name  + '</a> </h1> </div> <div> <h4> Number of Reviews: ' + results.review_count +' </h4> </div> <div> <img src="'+ results.rating_img_url + '"' +'</div>';
-      
+    google.maps.event.addListener(place.marker, 'click', function() {
 
-  
-        },
-        fail: function() {
-          // Do stuff on fail
-          console.log('Yelp API Error');
-
-        }
-      };
-
-      // Send AJAX query via jQuery library.
-      $.ajax(settings);
-
-
-
-      // listens for click on map markers and opens info window if clicked
-
-        google.maps.event.addListener(place.marker, 'click', function() {
-
-        self.openInfo(place);
-
-
+    self.openInfo(place);
     });
-
-
-  
-
-   });
+  });
 
 
   // cc - Toggles the map markers when clicked.  
@@ -170,22 +167,45 @@ var koViewModel = function() {
       marker.setAnimation(google.maps.Animation.BOUNCE);
     }
   }
-    
-
+ 
+  
   // cc - Opens the info window, sets the content, and toggles the bounce of the map marker.  
+
   self.openInfo = function (place) {
 
     
     infowindow.setContent(place.yelpName);
-    infowindow.open(self.googleMap, place.marker);
+    infowindow.open(googleMap, place.marker);
+
+    self.moveTo(place.latLng.lat, place.latLng.lng);
 
     toggleBounce(place.marker);
 
-     
+    setTimeout(function() {
+      toggleBounce(place.marker);
+    }, 3000);
     
   }
 
+  // Moves the map to the location of the place selected from list, or by marker
+  self.moveTo = function(lat, lng){
 
+    var latLng = new google.maps.LatLng(lat, lng);
+    googleMap.panTo(latLng);
+
+  }
+
+  self.showList = ko.observable(true);
+
+  self.toggle = function() {
+    
+    if (self.showList() === true) {
+      self.showList(false);
+    }
+    else {
+      self.showList(true);
+    }
+  };
 
   // sources http://codepen.io/prather-mcs/pen/KpjbNN from Udacity discussion board. 
   
@@ -251,8 +271,11 @@ var koViewModel = function() {
 };
 
 
-// Starts viewmodel on success from google callback.  From Udacity discussion board. 
-function googleSuccess() {
-ko.applyBindings(new koViewModel());
-}
+
+
+
+ 
+/*
+ko.applyBindings(koViewModel, document.getElementById("map-canvas"));
+*/
 
