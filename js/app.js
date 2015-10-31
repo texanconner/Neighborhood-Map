@@ -181,7 +181,8 @@ var koViewModel = function() {
 
 
   
-  // sources http://codepen.io/prather-mcs/pen/KpjbNN
+  // sources http://codepen.io/prather-mcs/pen/KpjbNN from Udacity discussion board. 
+  
   // This array will contain what its name implies: only the markers that should
   // be visible based on user input. My solution does not need to use an 
   // observableArray for this purpose, but other solutions may require that.
@@ -242,7 +243,7 @@ var koViewModel = function() {
 
 };
 
-
+// Starts viewmodel on success from google callback.  From Udacity discussion board. 
 function googleSuccess() {
 ko.applyBindings(new koViewModel());
 }
